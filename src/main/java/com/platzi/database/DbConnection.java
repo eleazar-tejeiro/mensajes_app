@@ -6,15 +6,28 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/*
+In this updated code example, we have added:
+
+1. volatile keyword to the instance variable to ensure that the instance is visible to all threads.
+
+2. A lock object to ensure that only one thread can access the getInstance method at a time.
+
+3. An IllegalStateException to the getConnection method to ensure that the connection has been initialized before it can be obtained.
+
+4. A shutdown hook to close the connection when the application terminates.
+* */
 public class DbConnection {
+    private static volatile DbConnection instance = null;
+    private static final Object lock = new Object();
 
-    public Connection getConnection() {
+    private Connection connection;
 
+    private DbConnection() {
         Dotenv dotenv = Dotenv.configure()
                 .directory(System.getProperty("user.dir"))
                 .load();
 
-        Connection connection = null;
         try {
             connection = DriverManager.getConnection("jdbc:mysql://"
                             + dotenv.get("DATABASE_HOST") +
@@ -22,12 +35,38 @@ public class DbConnection {
                             "/" + dotenv.get("DATABASE_NAME") + "",
                     dotenv.get("DATABASE_USER"),
                     dotenv.get("DATABASE_PASSWORD"));
-            if (connection != null) {
-                System.out.println("Conexion exitosa");
-            }
+
         } catch (SQLException e) {
             System.out.println(e);
+        }
+
+        // Add a shutdown hook to close the connection
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        }));
+    }
+
+    public static DbConnection getInstance() {
+        // Double-checked locking to ensure thread safety
+        if (instance == null) {
+            synchronized (lock) {
+                if (instance == null) {
+                    instance = new DbConnection();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public synchronized Connection getConnection() {
+        if (connection == null) {
+            throw new IllegalStateException("Connection has not been initialized.");
         }
         return connection;
     }
 }
+
