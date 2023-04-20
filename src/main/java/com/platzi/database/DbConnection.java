@@ -18,9 +18,8 @@ In this updated code example, we have added:
 4. A shutdown hook to close the connection when the application terminates.
 * */
 public class DbConnection {
-    private static volatile DbConnection instance = null;
-    private static final Object lock = new Object();
 
+    private static DbConnection instance = null;
     private Connection connection;
 
     private DbConnection() {
@@ -35,38 +34,24 @@ public class DbConnection {
                             "/" + dotenv.get("DATABASE_NAME") + "",
                     dotenv.get("DATABASE_USER"),
                     dotenv.get("DATABASE_PASSWORD"));
-
+            if (connection != null) {
+                System.out.println("Conexion exitosa");
+            }
         } catch (SQLException e) {
             System.out.println(e);
         }
-
-        // Add a shutdown hook to close the connection
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                System.out.println(e);
-            }
-        }));
     }
 
     public static DbConnection getInstance() {
-        // Double-checked locking to ensure thread safety
         if (instance == null) {
-            synchronized (lock) {
-                if (instance == null) {
-                    instance = new DbConnection();
-                }
-            }
+            instance = new DbConnection();
         }
         return instance;
     }
 
-    public synchronized Connection getConnection() {
-        if (connection == null) {
-            throw new IllegalStateException("Connection has not been initialized.");
-        }
+    public Connection getConnection() {
         return connection;
     }
 }
+
 

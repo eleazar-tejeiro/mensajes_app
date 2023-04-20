@@ -1,19 +1,19 @@
 package com.platzi.mensajes_app;
 
 import com.platzi.database.DbConnection;
+import com.platzi.mensajes_app.model.User;
 import com.platzi.mensajes_app.service.MessageService;
+import com.platzi.mensajes_app.service.UserService;
 
 import java.sql.Connection;
 import java.util.Scanner;
 
 public class Main {
     static String mainMenuMessage = ("=================== \n"
-            + "\n Mini red social \n"
-            + "1. Crear mensaje \n"
-            + "2. Listar mensaje \n"
-            + "3. Editar mensaje \n"
-            + "4. Eliminar mensaje \n"
-            + "5. Salir \n");
+            + "\n Mini Social Network Java \n"
+            + "1. Sign up \n"
+            + "2. Log in \n"
+            + "3. Exit \n");
 
     public static void mainMenu(Scanner sc) {
 
@@ -27,21 +27,18 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    MessageService.createMessage();
+                    UserService.createUser(sc);
                     break;
                 case 2:
-                    MessageService.getAllMessages();
-                    break;
-                case 3:
-                    MessageService.editMessage();
-                    break;
-                case 4:
-                    MessageService.deleteMessage();
+                    User resultado = UserService.login(sc);
+                    if (resultado.getUserId() > 0) {
+                        SessionMenu.menuSesion(resultado, sc);
+                    }
                     break;
                 default:
                     break;
             }
-        } while (option != 5);
+        } while (option != 3);
     }
 
     public static void main(String[] args) {
