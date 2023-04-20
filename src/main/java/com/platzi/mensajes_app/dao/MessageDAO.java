@@ -8,8 +8,8 @@ import java.sql.SQLException;
 
 public class MessageDAO {
     public static void createMessageDB(Message message) {
-        DbConnection dbConnection = DbConnection.getInstance();
-        try (Connection connection = dbConnection.getConnection()) {
+        try (DbConnection dbConnection = DbConnection.getInstance()) {
+            Connection connection = dbConnection.getConnection();
             PreparedStatement ps = null;
             try {
                 String query = "insert into mensajes(id_usuario,mensaje,fecha) values (?,?,CURRENT_TIMESTAMP)";
@@ -24,7 +24,6 @@ public class MessageDAO {
         } catch (Exception ex) {
             System.out.println(ex);
         }
-
     }
 
     public static void readMessageDB () {
