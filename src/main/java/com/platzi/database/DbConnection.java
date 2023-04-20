@@ -6,9 +6,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DbConnection implements AutoCloseable {
 
-    private static final DbConnection instance  = new DbConnection();
+public class DbConnection {
+
+    private static DbConnection instance = null;
     private Connection connection;
 
     private DbConnection() {
@@ -23,15 +24,16 @@ public class DbConnection implements AutoCloseable {
                             "/" + dotenv.get("DATABASE_NAME") + "",
                     dotenv.get("DATABASE_USER"),
                     dotenv.get("DATABASE_PASSWORD"));
-            if (connection != null) {
-                System.out.println("Conexion exitosa");
-            }
+
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
 
     public static DbConnection getInstance() {
+        if (instance == null) {
+            instance = new DbConnection();
+        }
         return instance;
     }
 
@@ -39,12 +41,10 @@ public class DbConnection implements AutoCloseable {
         return connection;
     }
 
-    @Override
-    public void close() throws Exception {
-        if (connection != null && !connection.isClosed()) {
-            connection.close();
-        }
+    public void closeConnection() throws SQLException {
+        connection.close();
     }
 }
+
 
 
