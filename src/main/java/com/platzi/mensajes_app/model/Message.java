@@ -1,50 +1,89 @@
 package com.platzi.mensajes_app.model;
 
 public class Message {
-    private int id_mensaje;
-    private String mensaje;
-    private String autor_mensaje;
-    private String fecha_mensaje;
+    //attributes
+    private int messageId;
+    private String message;
+    private String date;
+    private String fullName;
+    //foreign attributes
+    private int userId;
 
-    public Message() {
+    //constructors
+    public Message(){
     }
 
-    public Message(int id_mensaje, String mensaje, String autor_mensaje, String fecha_mensaje) {
-        this.id_mensaje = id_mensaje;
-        this.mensaje = mensaje;
-        this.autor_mensaje = autor_mensaje;
-        this.fecha_mensaje = fecha_mensaje;
+    /**
+     * Constructor to delete a message by Id
+     * @param messageId
+     * */
+    public Message(int messageId, int userId) {
+        this.messageId = messageId;
+        this.userId = userId;
     }
 
-    public int getId_mensaje() {
-        return id_mensaje;
+    /**
+     * Constructor to create a message
+     * @param message
+     * @param userId
+     * */
+    public Message(String message, int userId) {
+        this.message = message;
+        this.userId = userId;
     }
 
-    public void setId_mensaje(int id_mensaje) {
-        this.id_mensaje = id_mensaje;
+    /**
+     * Constructor to list all messages
+     * @param messageId
+     * @param message
+     * @param date
+     * @param fullName
+     * */
+    public Message(int messageId, String message, String date, String fullName) {
+        this.messageId = messageId;
+        this.message = message;
+        this.date = date;
+        this.fullName = fullName;
     }
 
-    public String getMensaje() {
-        return mensaje;
+    //getters and setters
+    public int getmessageId() {
+        return messageId;
     }
 
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
+    public void setmessageId(int messageId) {
+        this.messageId = messageId;
     }
 
-    public String getAutor_mensaje() {
-        return autor_mensaje;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setAutor_mensaje(String autor_mensaje) {
-        this.autor_mensaje = autor_mensaje;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public String getFecha_mensaje() {
-        return fecha_mensaje;
+    public String getMessage() {
+        return message;
     }
 
-    public void setFecha_mensaje(String fecha_mensaje) {
-        this.fecha_mensaje = fecha_mensaje;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getfullName() {
+        return fullName;
+    }
+
+    public void setfullName(String fullName) {
+        this.fullName = fullName;
     }
 }
