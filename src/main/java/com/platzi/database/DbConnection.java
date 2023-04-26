@@ -41,8 +41,12 @@ public class DbConnection {
         return connection;
     }
 
-    public void closeConnection() throws SQLException {
-        connection.close();
+    public void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

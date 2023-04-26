@@ -32,7 +32,7 @@ public class SessionMenu {
                     MessageService.getAllMessages();
                     break;
                 case 3:
-                    MessageService.deleteMessage();
+                    MessageService.deleteMessage(sc);
                     break;
                 case 4:
                     UserService.editUser(usuario, sc);

@@ -4,6 +4,8 @@ import com.platzi.mensajes_app.dao.MessageDAO;
 import com.platzi.mensajes_app.model.Message;
 import com.platzi.mensajes_app.model.User;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class MessageService {
@@ -16,11 +18,23 @@ public class MessageService {
         MessageDAO.createMessageDB(message);
     }
     public static void getAllMessages() {
-
+        try {
+            ResultSet rs = MessageDAO.readMessageDB();
+            while (rs.next()) {
+                System.out.print("\n[ID: " + rs.getString("id_mensaje") + " | ");
+                System.out.print("Mensaje: -" + rs.getString("mensaje") + " | ");
+                System.out.print("Autor: -" + rs.getString("nombre_completo") + " | ");
+                System.out.print("Fecha: " + rs.getString("fecha") + " ] ");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static void deleteMessage() {
-
+    public static void deleteMessage(Scanner sc) {
+        System.out.println(messageIdToBeDeletedMessage);
+        int messageId = sc.nextInt();
+        MessageDAO.deleteMessageDB(messageId);
     }
 
     public static void editMessage() {
